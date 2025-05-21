@@ -13,7 +13,7 @@ const getAllMoods = async (req, res) => {
 // get mood by id
 const getMoodById = async (req, res) => {
     try {
-        const { id } = req.params.id;
+        const { id } = req.params;
         const mood = await MoodModel.findById(id);
         if (!mood) {
             return res.status(404).json({ message: 'Mood not found' });
@@ -28,12 +28,6 @@ const getMoodById = async (req, res) => {
 const createMood = async (req, res) => {
     try {
         const { name } = req.body;
-
-        // Validate name
-        if (!name || typeof name !== 'string' || name.trim() === '') {
-            return res.status(400).json({ message: 'Mood name is required and must be a non-empty string' });
-        }
-
         const newMood = new MoodModel({ name });
         const savedMood = await newMood.save();
         res.status(201).json(savedMood);

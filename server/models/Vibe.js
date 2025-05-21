@@ -17,7 +17,8 @@ const vibeSchema = new mongoose.Schema({
     },
     image: {
         type: String, // Path or URL to image
-        required: false
+        required: false,
+        default: null
     },
     moodIds: [{
         type: mongoose.Schema.Types.ObjectId,

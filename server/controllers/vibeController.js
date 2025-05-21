@@ -1,5 +1,4 @@
 import VibeModel from '../models/Vibe.js';
-import MoodModel from '../models/Mood.js';
 
 // get all vibes
 const getAllVibes = async (req, res) => {
@@ -15,7 +14,7 @@ const getAllVibes = async (req, res) => {
 // get vibe by id
 const getVibeById = async (req, res) => {
     try {
-        const { id } = req.params.id;
+        const { id } = req.params;
         const vibe = await VibeModel.findById(id).populate('moodIds');
         if (!vibe) {
             return res.status(404).json({ message: 'Vibe not found' });
@@ -29,7 +28,7 @@ const getVibeById = async (req, res) => {
 // get vibes by mood id
 const getVibesByMoodId = async (req, res) => {
     try {
-        const { moodId } = req.params.moodId;
+        const { moodId } = req.params;
         const vibes = await VibeModel.find({ moodIds: moodId }).populate('moodIds');
         if (vibes.length === 0) {
             return res.status(404).json({ message: 'No vibes found for this mood' });
@@ -45,27 +44,17 @@ const getVibesByMoodId = async (req, res) => {
 const createVibe = async (req, res) => {
     try {
         const { nickname, text, moodIds } = req.body;
-        const image = req.file.path;
+        const image = req.file ? req.file.path : null;
 
-        // Validate nickname, text and moods
-        if (!nickname || !text || !moodIds) {
-            return res.status(400).json({ message: 'Nickname, text, and moods are required' });
-        }
-
-        // Validate moods
-        const moodIds_arr = moodIds.split(',').map(id => id.trim());
-        console.log(moodIds_arr);
-        const existingMoods = await MoodModel.find({ _id: { $in: moodIds_arr } });
-        console.log(existingMoods);
-        if (existingMoods.length !== moodIds_arr.length) {
-            return res.status(400).json({ message: 'One or more moods are invalid' });
-        }
+        const moodIdArray = Array.isArray(moodIds)
+            ? moodIds
+            : moodIds.split(',').map(id => id.trim());
 
         const newVibe = new VibeModel({
             nickname,
             text,
             image,
-            moodIds: moodIds_arr
+            moodIds: moodIdArray
         });
 
         const savedVibe = await newVibe.save();
