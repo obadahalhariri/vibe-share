@@ -4,7 +4,9 @@ import VibeModel from '../models/Vibe.js';
 const getAllVibes = async (req, res) => {
     try {
         const vibes = await VibeModel.find().populate('moodIds');
-        vibes.length === 0 ? res.status(404).send('No vibes found') : res.status(200).json(vibes);
+        if (!vibes.length) {
+            return res.status(404).json({ message: 'No vibes found.' });
+        }
         res.status(200).json(vibes);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -30,7 +32,7 @@ const getVibesByMoodId = async (req, res) => {
     try {
         const { moodId } = req.params;
         const vibes = await VibeModel.find({ moodIds: moodId }).populate('moodIds');
-        if (vibes.length === 0) {
+        if (!vibes.length) {
             return res.status(404).json({ message: 'No vibes found for this mood' });
         }
         res.status(200).json(vibes);
@@ -64,4 +66,18 @@ const createVibe = async (req, res) => {
     }
 };
 
-export { getAllVibes, getVibeById, getVibesByMoodId, createVibe };
+// delete vibe by id
+const deleteVibeById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedVibe = await VibeModel.findByIdAndDelete(id);
+        if (!deletedVibe) {
+            return res.status(404).json({ message: 'Vibe not found' });
+        }
+        res.status(200).json({ message: 'Vibe deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export { getAllVibes, getVibeById, getVibesByMoodId, createVibe, deleteVibeById };

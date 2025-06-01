@@ -5,8 +5,7 @@ const createVibeValidation = [
     body('nickname').trim().notEmpty().withMessage('Nickname is required'),
     body('text').trim().notEmpty().withMessage('Text is required'),
     body('moodIds')
-        .notEmpty()
-        .withMessage('You must select at least one mood or create your own')
+        .notEmpty().withMessage('You must select at least one mood or create your own')
         .custom((value) => {
             let ids;
 

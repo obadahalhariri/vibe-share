@@ -36,4 +36,18 @@ const createMood = async (req, res) => {
     }
 }
 
-export { getAllMoods, getMoodById, createMood };
+// Delete mood by id
+const deleteMoodById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedMood = await MoodModel.findByIdAndDelete(id);
+        if (!deletedMood) {
+            return res.status(404).json({ message: 'Mood not found' });
+        }
+        res.status(200).json({ message: 'Mood deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export { getAllMoods, getMoodById, createMood, deleteMoodById };
