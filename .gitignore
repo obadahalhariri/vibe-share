@@ -11,3 +11,6 @@ logs
 # OS / editor settings
 .DS_Store
 .vscode/
+
+# Uploads / Images folder
+images/
