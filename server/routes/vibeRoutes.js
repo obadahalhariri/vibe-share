@@ -1,7 +1,7 @@
 import express from 'express';
 import { getAllVibes, getVibeById, getVibesByMoodId, createVibe, deleteVibeById } from '../controllers/vibeController.js';
-import upload from '../middelware/upload.js';
-import handleValidationErrors from '../middelware/handleValidationErrors.js';
+import upload from '../middleware/upload.js';
+import handleValidationErrors from '../middleware/handleValidationErrors.js';
 import { createVibeValidation } from '../validations/vibeValidation.js';
 
 // Create a new router
