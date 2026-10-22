@@ -7,6 +7,7 @@ import vibeRouter from './routes/vibeRoutes.js';
 import moodsRouter from './routes/moodRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 // Get the current directory name
 // This is necessary to use __dirname in ES modules
@@ -32,6 +33,12 @@ app.use('/images', express.static(path.join(__dirname, 'images')));         // S
 
 app.use('/api/vibes', vibeRouter);                                          // Vibe routes
 app.use('/api/moods', moodsRouter);                                         // Mood routes  
+
+// Ensure the images directory exists
+const uploadDir = path.join(__dirname, 'images');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Start the server
 app.listen(PORT, () => {
